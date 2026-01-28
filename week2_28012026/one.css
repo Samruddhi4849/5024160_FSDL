@@ -1,0 +1,40 @@
+/* This is a CSS comment */
+
+body {
+    background-color: lightblue;
+    font-family: Arial, sans-serif;
+}
+
+/* Class selector */
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+}
+
+/* ID selector */
+#title {
+    color: darkblue;
+    text-align: center;
+}
+
+/* Element selector */
+p {
+    font-size: 16px;
+    color: black;
+}
+
+/* Hover pseudo-class */
+button:hover {
+    background-color: green;
+    color: white;
+}
+
+/* Multiple properties */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
