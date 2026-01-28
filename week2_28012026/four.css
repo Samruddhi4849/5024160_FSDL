@@ -1,0 +1,50 @@
+/* ===== PSEUDO-CLASSES ===== */
+
+/* Hover pseudo-class */
+a:hover {
+    color: red;
+    text-decoration: underline;
+}
+
+/* Visited link */
+a:visited {
+    color: purple;
+}
+
+/* Active state */
+button:active {
+    background-color: green;
+    color: white;
+}
+
+/* Focus pseudo-class */
+input:focus {
+    border: 2px solid blue;
+    outline: none;
+}
+
+
+/* ===== PSEUDO-ELEMENTS ===== */
+
+/* First letter of paragraph */
+p::first-letter {
+    font-size: 30px;
+    color: darkblue;
+}
+
+/* First line of paragraph */
+p::first-line {
+    font-weight: bold;
+}
+
+/* Before pseudo-element */
+h1::before {
+    content: "★ ";
+    color: gold;
+}
+
+/* After pseudo-element */
+h1::after {
+    content: " ★";
+    color: gold;
+}
