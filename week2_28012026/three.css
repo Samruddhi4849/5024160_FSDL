@@ -1,0 +1,57 @@
+/* ===== Inclusion (External CSS file example) ===== */
+/* This CSS file is included in HTML using:
+   <link rel="stylesheet" href="style.css"> */
+
+
+/* ===== Selectors ===== */
+
+/* Element selector */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+}
+
+/* Class selector */
+.box {
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    border: 2px solid #333;
+}
+
+/* ID selector */
+#heading {
+    color: darkblue;
+    text-align: center;
+}
+
+/* Group selector */
+h2, p {
+    color: #444444;
+}
+
+/* ===== Lists Styling ===== */
+
+/* Unordered list */
+ul {
+    list-style-type: square;
+    padding-left: 40px;
+}
+
+/* Ordered list */
+ol {
+    list-style-type: upper-roman;
+    padding-left: 40px;
+}
+
+/* List items */
+li {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Hover pseudo-class */
+li:hover {
+    color: blue;
+}
