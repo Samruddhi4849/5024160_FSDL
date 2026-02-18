@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Operators and Conditions Demo</title>
+</head>
+<body>
+
+    <h1>JavaScript Operators & Conditions</h1>
+
+    <p id="result"></p>
+
+    <script>
+        // Variables
+        let productPrice = 5000;
+        let quantity = 2;
+        let discount = 1000;
+
+        // Arithmetic Operators
+        let total = productPrice * quantity;   // Multiplication
+        let finalAmount = total - discount;    // Subtraction
+
+        // Condition using if-else
+        if (finalAmount > 8000) {
+            document.getElementById("result").innerHTML =
+                "Total: ₹" + total + "<br>" +
+                "Final Amount after discount: ₹" + finalAmount + "<br>" +
+                "You are eligible for Free Shipping!";
+        }
+        else {
+            document.getElementById("result").innerHTML =
+                "Total: ₹" + total + "<br>" +
+                "Final Amount after discount: ₹" + finalAmount + "<br>" +
+                "Shipping charges will apply.";
+        }
+    </script>
+
+</body>
+</html>
