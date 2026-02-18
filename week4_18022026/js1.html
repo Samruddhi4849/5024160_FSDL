@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Variables Demo</title>
+</head>
+<body>
+
+    <h1 id="heading1"> First Syntax </h1>
+    <h6 id="heading2"> Second Syntax </h6>
+
+    <p id="output"></p>
+
+    <script>
+        // Declaring variables
+        var websiteName = "Royal Gems";
+        let productName = "Gold Necklace";
+        const price = 25000;
+
+        // Changing value of let variable
+        productName = "Diamond Ring";
+
+        // Displaying variables in paragraph
+        document.getElementById("output").innerHTML =
+            "Website: " + websiteName + "<br>" +
+            "Product: " + productName + "<br>" +
+            "Price: ₹" + price;
+
+        // Changing heading text using variables
+        document.getElementById("heading1").innerHTML = websiteName;
+        document.getElementById("heading2").innerHTML = productName;
+    </script>
+
+</body>
+</html>
