@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildlife Rescue Investigation Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .screen {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .env-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .search-area {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            border: 2px solid #000;
+            background: linear-gradient(to bottom, #228B22, #32CD32); /* Forest default */
+        }
+        .search-area.city {
+            background: linear-gradient(to bottom, #708090, #A9A9A9);
+        }
+        .search-area.coastal {
+            background: linear-gradient(to bottom, #87CEEB, #4682B4);
+        }
+        .search-area.village {
+            background: linear-gradient(to bottom, #9ACD32, #556B2F);
+        }
+        .magnifier {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #000;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            display: none;
+        }
+        .animal {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+        .animal.found {
+            opacity: 1;
+        }
+        .counter {
+            font-size: 24px;
+            margin: 10px;
+        }
+        .sorting {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .animal-card {
+            font-size: 40px;
+            padding: 10px;
+            border: 1px solid #000;
+            background: #fff;
+            cursor: grab;
+            user-select: none;
+        }
+        .drop-zone {
+            width: 150px;
+            height: 200px;
+            border: 2px dashed #000;
+            background: #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px;
+        }
+        .drop-zone.over {
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wildlife Rescue Investigation Game</h1>
+
+    <div id="start-screen" class="screen active">
+        <h2>Choose Simulation Environment</h2>
+        <div class="env-buttons">
+            <button onclick="chooseEnv('forest')">🌲 Forest</button>
+            <button onclick="chooseEnv('city')">🏙️ City</button>
+            <button onclick="chooseEnv('coastal')">🌊 Coastal Area</button>
+            <button onclick="chooseEnv('village')">🏘️ Village</button>
+        </div>
+    </div>
+
+    <div id="calamity-screen" class="screen">
+        <h2 id="calamity-msg"></h2>
+        <button onclick="startSearch()">Start Search</button>
+    </div>
+
+    <div id="search-screen" class="screen">
+        <h2>Find the Hidden Animals!</h2>
+        <div class="counter">Found: <span id="found-count">0</span>/<span id="total-count">0</span></div>
+        <div id="search-area" class="search-area">
+            <div id="magnifier" class="magnifier"></div>
+        </div>
+    </div>
+
+    <div id="sorting-screen" class="screen">
+        <h2>Sort the Animals</h2>
+        <div class="sorting">
+            <div class="drop-zone" id="hospital" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>🏥 Hospital</h3>
+            </div>
+            <div class="drop-zone" id="release" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>🆓 Release Back to Wild</h3>
+            </div>
+            <div class="drop-zone" id="ngo" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>🏢 Send to Rescue NGO</h3>
+            </div>
+            <div class="drop-zone" id="adoption" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>🏠 Put for Adoption</h3>
+            </div>
+        </div>
+        <div id="animal-cards"></div>
+    </div>
+
+    <script>
+        const environments = {
+            forest: {
+                calamity: "wildfire",
+                animals: [
+                    {name: "deer", emoji: "🦌", category: "release"},
+                    {name: "fox", emoji: "🦊", category: "hospital"},
+                    {name: "owl", emoji: "🦉", category: "ngo"},
+                    {name: "rabbit", emoji: "🐰", category: "adoption"},
+                    {name: "squirrel", emoji: "🐿️", category: "release"}
+                ]
+            },
+            city: {
+                calamity: "construction collapse",
+                animals: [
+                    {name: "pigeon", emoji: "🐦", category: "release"},
+                    {name: "rat", emoji: "🐀", category: "hospital"},
+                    {name: "cat", emoji: "🐱", category: "adoption"},
+                    {name: "dog", emoji: "🐶", category: "ngo"},
+                    {name: "squirrel", emoji: "🐿️", category: "release"}
+                ]
+            },
+            coastal: {
+                calamity: "oil spill",
+                animals: [
+                    {name: "seal", emoji: "🦭", category: "hospital"},
+                    {name: "crab", emoji: "🦀", category: "release"},
+                    {name: "fish", emoji: "🐟", category: "ngo"},
+                    {name: "bird", emoji: "🐦", category: "release"},
+                    {name: "turtle", emoji: "🐢", category: "adoption"}
+                ]
+            },
+            village: {
+                calamity: "flood",
+                animals: [
+                    {name: "cow", emoji: "🐄", category: "ngo"},
+                    {name: "goat", emoji: "🐐", category: "release"},
+                    {name: "chicken", emoji: "🐔", category: "adoption"},
+                    {name: "dog", emoji: "🐶", category: "hospital"},
+                    {name: "cat", emoji: "🐱", category: "release"}
+                ]
+            }
+        };
+
+        let currentEnv;
+        let foundAnimals = new Set();
+
+        function chooseEnv(env) {
+            currentEnv = env;
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('calamity-screen').classList.add('active');
+            document.getElementById('calamity-msg').textContent = `A ${environments[env].calamity} has occurred! Animals are trapped. Find them!`;
+        }
+
+        function startSearch() {
+            document.getElementById('calamity-screen').classList.remove('active');
+            document.getElementById('search-screen').classList.add('active');
+            const searchArea = document.getElementById('search-area');
+            searchArea.className = 'search-area ' + currentEnv;
+            const animals = environments[currentEnv].animals;
+            document.getElementById('total-count').textContent = animals.length;
+            animals.forEach((animal, index) => {
+                const animalDiv = document.createElement('div');
+                animalDiv.className = 'animal';
+                animalDiv.textContent = animal.emoji;
+                animalDiv.style.left = Math.random() * 700 + 'px';
+                animalDiv.style.top = Math.random() * 500 + 'px';
+                animalDiv.addEventListener('mouseenter', () => {
+                    if (!foundAnimals.has(index)) {
+                        foundAnimals.add(index);
+                        animalDiv.classList.add('found');
+                        document.getElementById('found-count').textContent = foundAnimals.size;
+                        if (foundAnimals.size === animals.length) {
+                            setTimeout(showSorting, 1000);
+                        }
+                    }
+                });
+                searchArea.appendChild(animalDiv);
+            });
+            // Magnifier
+            const magnifier = document.getElementById('magnifier');
+            magnifier.style.display = 'block';
+            searchArea.addEventListener('mousemove', (e) => {
+                const rect = searchArea.getBoundingClientRect();
+                magnifier.style.left = (e.clientX - rect.left - 50) + 'px';
+                magnifier.style.top = (e.clientY - rect.top - 50) + 'px';
+            });
+        }
+
+        function showSorting() {
+            document.getElementById('search-screen').classList.remove('active');
+            document.getElementById('sorting-screen').classList.add('active');
+            const animals = environments[currentEnv].animals;
+            const cardsDiv = document.getElementById('animal-cards');
+            animals.forEach((animal, index) => {
+                const card = document.createElement('div');
+                card.className = 'animal-card';
+                card.textContent = animal.emoji;
+                card.draggable = true;
+                card.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text', index);
+                });
+                cardsDiv.appendChild(card);
+            });
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.target.classList.add('over');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.target.classList.remove('over');
+            const index = ev.dataTransfer.getData('text');
+            const card = document.querySelectorAll('.animal-card')[index];
+            if (card) {
+                ev.target.appendChild(card);
+            }
+        }
+    </script>
+</body>
+</html>
