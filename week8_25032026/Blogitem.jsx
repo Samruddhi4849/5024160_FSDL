@@ -1,12 +1,15 @@
-import { Link } from &quot;react-router-dom&quot;;
+import { Link } from "react-router-dom";
+
 function BlogItem({ blog }) {
-  return (
-    &lt;div className=&quot;blog-item&quot;&gt;
-      &lt;h3&gt;{blog.title}&lt;/h3&gt;
-      &lt;p&gt;{blog.content}&lt;/p&gt;
-      &lt;Link to={`/blog/${blog.id}`}&gt;
-        &lt;button&gt;Read More&lt;/button&gt;
-      &lt;/Link&gt;
-    &lt;/div&gt;
-  );
+  return (
+    <div className="blog-item">
+      <h3>{blog.title}</h3>
+      <p>{blog.content}</p>
+      <Link to={`/blog/${blog.id}`}>
+        <button>Read More</button>
+      </Link>
+    </div>
+  );
 }
+
+export default BlogItem;
