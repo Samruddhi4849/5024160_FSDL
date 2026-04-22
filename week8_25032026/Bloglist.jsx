@@ -1,13 +1,13 @@
-export default BlogItem;
-import BlogItem from &quot;./BlogItem&quot;;
+import BlogItem from "./BlogItem";
+
 function BlogList({ blogs }) {
-  return (
-    &lt;div&gt;
-      {blogs.map((blog) =&gt; (
-        &lt;BlogItem key={blog.id} blog={blog}
-/&gt;
-      ))}
-    &lt;/div&gt;
-  );
+  return (
+    <div>
+      {blogs.map((blog) => (
+        <BlogItem key={blog.id} blog={blog} />
+      ))}
+    </div>
+  );
 }
+
 export default BlogList;
